@@ -51,6 +51,9 @@ document.addEventListener("keydown", (event) => {
             print("Loaded!");
         } else if (order === "find") {
             findAndFocus(args[0]);
+        } else if (order === "replace") {
+            code.value = code.value.replace(args[0], args[1]);
+            print("Replaced!")
         }
         cmd.value = "";
         code.focus();
