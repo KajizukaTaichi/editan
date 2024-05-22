@@ -20,12 +20,10 @@ function findAndFocus(searchText) {
         return;
     }
 
-    let textarea = code;
-
     var index = code.value.indexOf(searchText);
     if (index !== -1) {
         code.focus();
-        textarea.setSelectionRange(index, index + searchText.length);
+        code.setSelectionRange(index, index + searchText.length);
         print(`Found ${searchText}`);
     } else {
         print("Not found");
@@ -34,7 +32,7 @@ function findAndFocus(searchText) {
 }
 
 document.addEventListener("keydown", (event) => {
-    if (event.key === "Control" && event.altKey) {
+    if (event.shiftKey && event.code === "Tab") {
         event.preventDefault();
         cmd.focus();
     } else if (event.code === "Tab" && document.activeElement === code) {
@@ -46,10 +44,10 @@ document.addEventListener("keydown", (event) => {
         let args = cmd.value.split(" ").slice(1);
 
         if (order === "save") {
-            localStorage.setItem("code", code.value);
+            localStorage.setItem(args[0], code.value);
             print("Saved!");
         } else if (order === "load") {
-            code.value = localStorage.getItem("code");
+            code.value = localStorage.getItem(args[0]);
             print("Loaded!");
         } else if (order === "find") {
             findAndFocus(args[0]);
