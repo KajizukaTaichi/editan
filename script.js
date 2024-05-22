@@ -34,7 +34,7 @@ function findAndFocus(searchText) {
 }
 
 document.addEventListener("keydown", (event) => {
-    if (event.key === "Control") {
+    if (event.key === "Control" && event.altKey) {
         cmd.focus();
     } else if (event.code === "Tab" && document.activeElement === code) {
         event.preventDefault();
