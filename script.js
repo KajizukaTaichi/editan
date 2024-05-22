@@ -2,7 +2,7 @@ let code = document.getElementById("code");
 let cmd = document.getElementById("cmd");
 let disp = document.getElementById("disp");
 
-function print(text) {
+function log(text) {
     disp.textContent = `Editan - ${text}`
 }
 
@@ -24,11 +24,26 @@ function findAndFocus(searchText) {
     if (index !== -1) {
         code.focus();
         code.setSelectionRange(index, index + searchText.length);
-        print(`Found ${searchText}`);
+        log(`Found ${searchText}`);
     } else {
-        print("Not found");
+        log("Not found");
     }
 
+}
+
+function downloadTextFile(text, name) {
+    var blob = new Blob([text], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 document.addEventListener("keydown", (event) => {
@@ -45,15 +60,19 @@ document.addEventListener("keydown", (event) => {
 
         if (order === "save") {
             localStorage.setItem(args[0], code.value);
-            print("Saved!");
+            log("Saved!");
         } else if (order === "load") {
             code.value = localStorage.getItem(args[0]);
-            print("Loaded!");
+            log("Loaded!");
         } else if (order === "find") {
             findAndFocus(args[0]);
         } else if (order === "replace") {
             code.value = code.value.replace(args[0], args[1]);
-            print("Replaced!")
+            log("Replaced!")
+        } else if (order === "down") {
+            downloadTextFile(code.value, args[0])
+        } else {
+            log("Please enter vaild command")
         }
         cmd.value = "";
         code.focus();
