@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
-        mode: "javascript"
+        mode: "javascript",
+        indentUnit: 2,
+        autoCloseBrackets: true
     });
 });
 
@@ -84,9 +86,6 @@ document.addEventListener("keydown", (event) => {
     if (event.ctrlKey && event.code === "Space") {
         event.preventDefault();
         cmd.focus();
-    } else if (event.code === "Tab" && document.activeElement === code) {
-        event.preventDefault();
-        insertAtCursor(code, '  ');
     } else if (event.code === "Enter" && document.activeElement === cmd) {
         event.preventDefault();
         let order = cmd.value.split(" ")[0].toLowerCase();
