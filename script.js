@@ -46,6 +46,16 @@ function downloadTextFile(text, name) {
     URL.revokeObjectURL(url);
 }
 
+function copyClipboard(textToCopy) {
+    navigator.clipboard.writeText(textToCopy)
+    .then(function () {
+        log('Text copied to clipboard');
+    })
+    .catch(function (err) {
+        log('Unable to copy text: ', err);
+    });
+}
+
 document.addEventListener("keydown", (event) => {
     if (event.shiftKey && event.code === "Tab") {
         event.preventDefault();
@@ -55,7 +65,7 @@ document.addEventListener("keydown", (event) => {
         insertAtCursor(code, '\t');
     } else if (event.code === "Enter" && document.activeElement === cmd) {
         event.preventDefault();
-        let order = cmd.value.split(" ")[0];
+        let order = cmd.value.split(" ")[0].toLowerCase();
         let args = cmd.value.split(" ").slice(1);
 
         if (order === "save") {
@@ -71,6 +81,8 @@ document.addEventListener("keydown", (event) => {
             log("Replaced!")
         } else if (order === "down") {
             downloadTextFile(code.value, args[0])
+        } else if (order === "copy") {
+            copyClipboard(code.value);
         } else {
             log("Please enter vaild command")
         }
