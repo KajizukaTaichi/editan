@@ -74,7 +74,7 @@ document.addEventListener("keydown", (event) => {
         cmd.focus();
     } else if (event.code === "Tab" && document.activeElement === code) {
         event.preventDefault();
-        insertAtCursor(code, '\t');
+        insertAtCursor(code, '  ');
     } else if (event.code === "Enter" && document.activeElement === cmd) {
         event.preventDefault();
         let order = cmd.value.split(" ")[0].toLowerCase();
