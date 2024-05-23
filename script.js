@@ -1,6 +1,18 @@
-let code = document.getElementById("code");
-let cmd = document.getElementById("cmd");
-let disp = document.getElementById("disp");
+let cmd;
+let code;
+let disp;
+var editor;
+
+document.addEventListener("DOMContentLoaded", function () {
+    cmd = document.getElementById("cmd");
+    code = document.getElementById("code");
+    disp = document.getElementById("disp");
+
+    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "javascript"
+    });
+});
 
 function log(text) {
     disp.textContent = `Editan - ${text}`
@@ -83,6 +95,9 @@ document.addEventListener("keydown", (event) => {
             downloadTextFile(code.value, args[0])
         } else if (order === "copy") {
             copyClipboard(code.value);
+        } else if (order === "lang") {
+            editor.setOption("mode", args[0]);
+            log("Language is changed!")
         } else {
             log("Please enter vaild command")
         }
