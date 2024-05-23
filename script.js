@@ -32,16 +32,26 @@ function findAndFocus(searchText) {
         return;
     }
 
-    var index = code.value.indexOf(searchText);
+    var codeText = editor.getValue(); 
+    var index = codeText.indexOf(searchText); 
+
+    let line = 0;
+    for (i of codeText.split("\n")) {
+        if (i.includes(searchText)) {
+            break
+        }
+        line++;
+    }
+
     if (index !== -1) {
-        code.focus();
-        code.setSelectionRange(index, index + searchText.length);
+        editor.focus(); 
+        editor.setSelection({ line: line, ch: index }, { line: line, ch: index + searchText.length }); 
         log(`Found ${searchText}`);
     } else {
         log("Not found");
     }
-
 }
+
 
 function downloadTextFile(text, name) {
     var blob = new Blob([text], { type: 'text/plain' });
@@ -60,16 +70,16 @@ function downloadTextFile(text, name) {
 
 function copyClipboard(textToCopy) {
     navigator.clipboard.writeText(textToCopy)
-    .then(function () {
-        log('Text copied to clipboard');
-    })
-    .catch(function (err) {
-        log('Unable to copy text: ', err);
-    });
+        .then(function () {
+            log('Text copied to clipboard');
+        })
+        .catch(function (err) {
+            log('Unable to copy text: ', err);
+        });
 }
 
 document.addEventListener("keydown", (event) => {
-    if (event.shiftKey && event.code === "Tab") {
+    if (event.ctrlKey && event.code === "Space") {
         event.preventDefault();
         cmd.focus();
     } else if (event.code === "Tab" && document.activeElement === code) {
@@ -81,20 +91,20 @@ document.addEventListener("keydown", (event) => {
         let args = cmd.value.split(" ").slice(1);
 
         if (order === "save") {
-            localStorage.setItem(args[0], code.value);
+            localStorage.setItem(args[0], editor.getValue()); 
             log("Saved!");
         } else if (order === "load") {
-            code.value = localStorage.getItem(args[0]);
+            editor.setValue(localStorage.getItem(args[0])); 
             log("Loaded!");
         } else if (order === "find") {
             findAndFocus(args[0]);
         } else if (order === "replace") {
-            code.value = code.value.replace(args[0], args[1]);
+            editor.setValue(editor.getValue().replace(new RegExp(args[0], 'g'), args[1]));
             log("Replaced!")
         } else if (order === "down") {
-            downloadTextFile(code.value, args[0])
+            downloadTextFile(editor.getValue(), args[0]); 
         } else if (order === "copy") {
-            copyClipboard(code.value);
+            copyClipboard(editor.getValue()); 
         } else if (order === "lang") {
             editor.setOption("mode", args[0]);
             log("Language is changed!")
@@ -102,6 +112,6 @@ document.addEventListener("keydown", (event) => {
             log("Please enter vaild command")
         }
         cmd.value = "";
-        code.focus();
+        editor.focus(); 
     }
 });
