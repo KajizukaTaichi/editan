@@ -36,16 +36,18 @@ function findAndFocus(searchText) {
     var index = codeText.indexOf(searchText); 
 
     let line = 0;
+    let len = 0;
     for (i of codeText.split("\n")) {
         if (i.includes(searchText)) {
             break
         }
         line++;
+        len += i.length + 1;
     }
 
     if (index !== -1) {
         editor.focus(); 
-        editor.setSelection({ line: line, ch: index }, { line: line, ch: index + searchText.length }); 
+        editor.setSelection({ line: line, ch: index - len }, { line: line, ch: (index - len) + searchText.length }); 
         log(`Found ${searchText}`);
     } else {
         log("Not found");
